@@ -7,7 +7,7 @@ import (
 )
 
 func setupUI() {
-	window := ui.NewWindow("ARPSpoofing", 800, 600, false)
+	window := ui.NewWindow("ARPSpoofing Author:XDUer RickShang", 800, 600, false)
 	window.SetMargined(true)
 	BodyDiv := ui.NewVerticalBox()
 	BodyDiv.SetPadded(true)
@@ -28,9 +28,14 @@ func setupUI() {
 	startBtn.OnClicked(func(self *ui.Button) {
 		end := config.MaxBox.Value()
 		start := config.MinBox.Value()
-		iface := config.Iface
+
+		sender, err := config.NewSender()
+		if err != nil {
+			panic(err)
+		}
+
 		go func() {
-			if err := worker(start, end, iface, hostTable); err != nil {
+			if err := worker(start, end, config.Iface, hostTable, sender); err != nil {
 				log.Println(err)
 			}
 		}()

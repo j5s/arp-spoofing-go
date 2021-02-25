@@ -2,8 +2,8 @@ package main
 
 import (
 	"bytes"
-	"encoding/binary"
 	"errors"
+	"fmt"
 	"log"
 	"net"
 	"time"
@@ -27,33 +27,27 @@ func SendARP(handle *pcap.Handle, ethDstMAC, ethSrcMAC, arpDstMAC, arpSrcMAC net
 		ProtAddressSize:   4,
 		Operation:         opt, //request or reply
 		SourceHwAddress:   arpSrcMAC,
-		SourceProtAddress: arpSrcIP,
+		SourceProtAddress: arpSrcIP.To4(),
 		DstHwAddress:      arpDstMAC,
-		DstProtAddress:    arpDstIP,
+		DstProtAddress:    arpDstIP.To4(),
 	}
 	buf := gopacket.NewSerializeBuffer()
 	opts := gopacket.SerializeOptions{
 		FixLengths:       true,
 		ComputeChecksums: true,
 	}
-	gopacket.SerializeLayers(buf, opts, &eth, &arp)
+	if err := gopacket.SerializeLayers(buf, opts, &eth, &arp); err != nil {
+		return fmt.Errorf("序列化失败:%s", err)
+	}
 	//发送ARP数据包
-	err := handle.WritePacketData(buf.Bytes())
-	if err != nil {
-		return err
+	if err := handle.WritePacketData(buf.Bytes()); err != nil {
+		return fmt.Errorf("WritePacketData失败:%s", err)
 	}
 	return nil
 }
 
-//主机字节序转网络字节序
-func host2net(ip net.IP) []byte {
-	buf := make([]byte, 4)
-	num := binary.BigEndian.Uint32([]byte(ip[12:]))
-	binary.BigEndian.PutUint32(buf[:], num)
-	return buf
-}
-
-func ReceiveARP(handle *pcap.Handle, iface *net.Interface, out chan *HostItem, isRecvAll bool) {
+func ReceiveARP(handle *pcap.Handle, myMAC net.HardwareAddr, out chan *HostItem, isRecvAll bool) {
+	log.Println("RecvARP start")
 	src := gopacket.NewPacketSource(handle, layers.LayerTypeEthernet)
 	for packet := range src.Packets() {
 		arpLayer := packet.Layer(layers.LayerTypeARP)
@@ -62,19 +56,21 @@ func ReceiveARP(handle *pcap.Handle, iface *net.Interface, out chan *HostItem, i
 		}
 		arp := arpLayer.(*layers.ARP)
 		if isRecvAll {
+			// log.Println("收到数据包:", net.IP(arp.SourceProtAddress).String(), net.HardwareAddr(arp.SourceHwAddress).String())
+			// log.Println("收到数据包:", net.IP(arp.DstProtAddress).String(), net.HardwareAddr(arp.DstHwAddress).String())
 			out <- newHostItem(net.IP(arp.SourceProtAddress), net.HardwareAddr(arp.SourceHwAddress))
 			out <- newHostItem(net.IP(arp.DstProtAddress), net.HardwareAddr(arp.DstHwAddress))
 		} else {
 			if arp.Operation != layers.ARPReply {
 				continue
 			}
-			if !bytes.Equal([]byte(iface.HardwareAddr), arp.DstHwAddress) {
+			if !bytes.Equal([]byte(myMAC), arp.DstHwAddress) {
 				continue
 			}
 			out <- newHostItem(net.IP(arp.SourceProtAddress), net.HardwareAddr(arp.SourceHwAddress))
 		}
-
 	}
+	log.Println("ARPRecive quit")
 }
 
 //获取分配给该网卡的内网ipv4地址

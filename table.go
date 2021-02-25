@@ -69,7 +69,6 @@ func (this *modelHandler) NumRows(m *ui.TableModel) int {
 
 //从0开始计数
 func (this *modelHandler) CellValue(m *ui.TableModel, row, column int) ui.TableValue {
-	log.Println("CellValue", row, column)
 	switch column {
 	case 0:
 		return ui.TableString(this.Data[row].IP.String())

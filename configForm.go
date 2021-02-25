@@ -8,12 +8,6 @@ import (
 	"github.com/andlabs/ui"
 )
 
-type Config struct {
-	Iface  *net.Interface
-	MinBox *ui.Spinbox
-	MaxBox *ui.Spinbox
-}
-
 func makeConfigForm(window *ui.Window) (*ui.Form, *Config) {
 	cfg := &Config{}
 
@@ -36,6 +30,28 @@ func makeConfigForm(window *ui.Window) (*ui.Form, *Config) {
 
 	MAC := cfg.Iface.HardwareAddr
 	myMAClabel := ui.NewLabel(MAC.String())
+	//扫描方式
+	methodBox := ui.NewCombobox()
+	for _, v := range methods {
+		methodBox.Append(string(v))
+	}
+	methodBox.SetSelected(0)
+	cfg.ScanMethod = methods[0]
+	methodBox.OnSelected(func(c *ui.Combobox) {
+		index := c.Selected()
+		cfg.ScanMethod = methods[index]
+	})
+	//隐蔽程度
+	hideLevelBox := ui.NewCombobox()
+	for _, v := range hideLevels {
+		hideLevelBox.Append(string(v))
+	}
+	hideLevelBox.SetSelected(0)
+	cfg.HideLevel = hideLevels[0]
+	hideLevelBox.OnSelected(func(c *ui.Combobox) {
+		index := c.Selected()
+		cfg.HideLevel = hideLevels[index]
+	})
 
 	ifacesBox.OnSelected(func(c *ui.Combobox) {
 		cfg.Iface, _ = net.InterfaceByIndex(ifacesBox.Selected())
@@ -73,9 +89,12 @@ func makeConfigForm(window *ui.Window) (*ui.Form, *Config) {
 	rangeDiv.Append(ui.NewLabel("~"), false)
 	rangeDiv.Append(cfg.MaxBox, true)
 
-	configForm.Append("IfaceName", ifacesBox, false)
-	configForm.Append("MyIP", myIPlabel, false)
-	configForm.Append("MyMAC", myMAClabel, false)
-	configForm.Append("ScanRange", rangeDiv, false)
+	configForm.Append("网卡名称", ifacesBox, false)
+	configForm.Append("我的IP", myIPlabel, false)
+	configForm.Append("我的MAC地址", myMAClabel, false)
+	configForm.Append("扫描范围", rangeDiv, false)
+	configForm.Append("扫描方式", methodBox, false)
+	configForm.Append("隐蔽程度", hideLevelBox, false)
+
 	return configForm, cfg
 }

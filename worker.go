@@ -4,20 +4,12 @@ import (
 	"fmt"
 	"log"
 	"net"
-	"strconv"
 	"strings"
-	"time"
 
 	"github.com/andlabs/ui"
-	"github.com/google/gopacket/layers"
-	"github.com/google/gopacket/pcap"
 )
 
-func worker(start, end int, iface *net.Interface, hostTable *Table) error {
-	handle, err := pcap.OpenLive(iface.Name, 65536, true, 1000)
-	if err != nil {
-		return err
-	}
+func worker(start, end int, iface *net.Interface, hostTable *Table, sender Sender) error {
 	hostCh := make(chan *HostItem, 1024)
 	//消费者：
 	go func() {
@@ -34,43 +26,24 @@ func worker(start, end int, iface *net.Interface, hostTable *Table) error {
 			}
 		}
 	}()
+
 	//消费者+生产者：收包
 	go func() {
-		for {
-			ReceiveARP(handle, iface, hostCh, true)
+		if err := sender.Recv(hostCh); err != nil {
+			log.Println(err)
 		}
 	}()
+
 	//生产者：发包
 	myIP, _ := getIPv4ByIface(iface)
-	ipSlice := strings.Split(myIP.String(), ".")
-	nums := []int{}
-	for i := 0; i < 3; i++ {
-		i, err := strconv.Atoi(ipSlice[i])
-		if err != nil {
-			return err
-		}
-		nums = append(nums, i)
-	}
-	fmt.Println("************", nums)
-	ethDstMAC := net.HardwareAddr{0xff, 0xff, 0xff, 0xff, 0xff, 0xff}
-	ethSrcMAC := iface.HardwareAddr
-	arpDstMAC := net.HardwareAddr{0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
-	arpSrcMAC := ethSrcMAC
-	arpSrcIP, _ := getIPv4ByIface(iface)
+	myIParr := strings.Split(myIP.String(), ".")
 	for i := start; i <= end; i++ {
-		_arpDstIP := net.IPv4(byte(nums[0]), byte(nums[1]), byte(nums[2]), byte(i))
-		arpDstIP := host2net(_arpDstIP)
-		err := SendARP(handle, ethDstMAC, ethSrcMAC, arpDstMAC, arpSrcMAC, arpDstIP, arpSrcIP, layers.ARPRequest)
+		dstIP := net.ParseIP(fmt.Sprintf("%s.%s.%s.%d", myIParr[0], myIParr[1], myIParr[2], i))
+		err := sender.Send(dstIP)
 		if err != nil {
-			log.Println("sent arp request failed,because ", err)
-		} else {
-			log.Printf("ethDstMAC:%s,ethSrcMAC:%s,arpDstMAC:%s,arpSrcIP:%s,arpDstIP:%s,arpSrcIP:%s\n",
-				ethDstMAC.String(), ethSrcMAC.String(),
-				arpDstMAC.String(), arpSrcMAC.String(),
-				_arpDstIP, arpSrcIP.String())
+			log.Println("发送数据包失败:", err)
+			continue
 		}
 	}
-	//给1000s的收包时间
-	time.Sleep(10 * time.Second)
 	return nil
 }
