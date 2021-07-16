@@ -1,8 +1,9 @@
 package UI
 
 import (
-	"log"
 	"ARPSpoofing/Action"
+	"log"
+
 	"github.com/andlabs/ui"
 )
 
@@ -30,8 +31,6 @@ func SetupUI() {
 		start := config.MinBox.Value()
 
 		sender, err := config.NewSender()
-		log.Println(config.ScanMethod)
-		log.Println(config.HideLevel)
 		if err != nil {
 			panic(err)
 		}

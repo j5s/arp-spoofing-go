@@ -1,29 +1,19 @@
-package Socket
+package socket
 
 import (
 	"errors"
 	"net"
-
-	"github.com/andlabs/ui"
 )
 
-type Config struct {
-	Iface      *net.Interface
-	MinBox     *ui.Spinbox
-	MaxBox     *ui.Spinbox
-	ScanMethod ScanMethod
-	HideLevel  HideLevel
-}
-
-//简单工厂模式
-func (c *Config) NewSender() (Sender, error) {
-	switch c.ScanMethod {
-	case arp:
-		return newARPSender(c.Iface)
-	case udp:
-		return newUDPSender(c.Iface)
-	case all:
-		return newSuperSender(c.Iface)
+//NewSender 简单工厂模式
+func NewSender(scanMethod string, iface *net.Interface) (Sender, error) {
+	switch scanMethod {
+	case "arp":
+		return newARPSender(iface)
+	case "udp":
+		return newUDPSender(iface)
+	case "all":
+		return newSuperSender(iface)
 	default:
 		return nil, errors.New("error scanMethod")
 	}

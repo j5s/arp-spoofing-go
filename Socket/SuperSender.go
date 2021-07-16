@@ -1,4 +1,4 @@
-package Socket
+package socket
 
 import (
 	"log"
@@ -37,7 +37,6 @@ func (this *SuperSender) Send(dstIP net.IP) error {
 	return nil
 }
 func (this *SuperSender) Recv(out chan *HostItem) error {
-
 	go func() {
 		log.Println("recv arp start")
 		err := this.arpSender.Recv(out)

@@ -1,14 +1,29 @@
 package main
 
 import (
-	"ARPSpoofing/UI"
+	"ARPSpoofing/dao/mysql"
+	"ARPSpoofing/routers"
+	"ARPSpoofing/settings"
+	"log"
 
-	"github.com/andlabs/ui"
+	"github.com/abiosoft/ishell"
+	"github.com/abiosoft/readline"
 )
 
 func main() {
-	err := ui.Main(UI.SetupUI)
-	if err != nil {
-		panic(err)
+	shell := ishell.NewWithConfig(&readline.Config{
+		Prompt: "arp-spoofing > ",
+	})
+
+	shell.Println("happy hacking")
+	if err := settings.Init(); err != nil {
+		log.Println("settings.Init failed,err:", err)
+		return
 	}
+	if err := mysql.Init(); err != nil {
+		log.Println("mysql init failed,err:", err)
+		return
+	}
+	routers.Init(shell)
+	shell.Run()
 }
