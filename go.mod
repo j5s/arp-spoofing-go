@@ -10,6 +10,7 @@ require (
 	github.com/fatih/color v1.12.0 // indirect
 	github.com/fatih/structs v1.1.0
 	github.com/flynn-archive/go-shlex v0.0.0-20150515145356-3f9db97f8568 // indirect
+	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/google/gopacket v1.1.19
 	github.com/jmoiron/sqlx v1.3.4

@@ -6,13 +6,15 @@ import (
 	"ARPSpoofing/vars"
 	"fmt"
 	"log"
+	"net"
+	"strings"
 
 	"github.com/spf13/viper"
 )
 
 //ARPScanOptions ARP扫描配置
 var (
-	Options models.Options
+	Options *models.Options
 )
 
 //Init 初始化配置
@@ -29,17 +31,31 @@ func Init() (err error) {
 		fmt.Printf("viper.ReadInConfig() failed,err:%v\n", err)
 		return err
 	}
-	options := models.NewOptions("ARP Scan Options")
+	Options = models.NewOptions("ARP Scan Options")
 
-	//获取所有网卡
+	//获取默认网卡
 	vars.IfaceNames, err = utils.GetAllIfaceNames(true)
 	if err != nil {
 		log.Println("Utils.GetAllIfaceNames(true) failed,err:", err)
 		return err
 	}
+	iface, err := net.InterfaceByName(vars.IfaceNames[0])
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	//获取默认扫描范围
+	myIP, err := utils.GetIPv4ByIface(iface)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	scanRange := fmt.Sprintf("%s/24", myIP.String())
+	gateway := fmt.Sprintf("%s.1", strings.Join(strings.Split(myIP.String(), ".")[:3], "."))
 	//初始化扫描配置项
-	options.Add("ifname", vars.IfaceNames[0], true, "监听哪个网卡")
-	options.Add("range", "192.168.1.0/24", true, "扫描范围")
-	options.Add("type", "all", true, "扫描方式")
+	Options.Add("ifname", vars.IfaceNames[0], true, "监听哪个网卡")
+	Options.Add("range", scanRange, true, "扫描范围")
+	Options.Add("method", "all", true, "扫描方式:all,arp,udp")
+	Options.Add("gateway", gateway, true, "局域网的网关")
 	return nil
 }

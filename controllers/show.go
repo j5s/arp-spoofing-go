@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"ARPSpoofing/vars"
+	"ARPSpoofing/settings"
 
 	"github.com/abiosoft/ishell"
 )
@@ -15,10 +15,10 @@ func SetOptionHandler(c *ishell.Context) {
 		return
 	}
 	//2.业务逻辑
-	vars.ARPScanOptions.Set(c.Cmd.Name, c.Args[0])
+	settings.Options.Set(c.Cmd.Name, c.Args[0])
 }
 
 //ShowOptionsHandler 展示所有配置项
 func ShowOptionsHandler(c *ishell.Context) {
-	vars.ARPScanOptions.Show()
+	settings.Options.Show()
 }

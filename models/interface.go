@@ -1,6 +1,7 @@
 package models
 
 import (
+	"context"
 	"net"
 
 	"github.com/abiosoft/ishell"
@@ -15,8 +16,8 @@ type ModuleItem interface {
 	Run(c *ishell.Context)
 }
 
-//Sender 凡是能发送包，接收包都是Sender
-type Sender interface {
+//RecvSender 凡是能发送包，接收包都是RevSender
+type RecvSender interface {
 	Send(dstIP net.IP) error
-	Recv(out chan *Host) error
+	Recv(ctx context.Context) <-chan *Host
 }

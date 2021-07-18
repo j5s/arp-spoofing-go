@@ -3,6 +3,7 @@ package arp
 import (
 	"ARPSpoofing/models"
 	"ARPSpoofing/utils"
+	"context"
 	"fmt"
 	"net"
 
@@ -10,8 +11,8 @@ import (
 	"github.com/google/gopacket/pcap"
 )
 
-//ARPSender ARP广播包发送器
-type ARPSender struct {
+//RecvSender ARP广播包收发器
+type RecvSender struct {
 	ethDstMAC net.HardwareAddr
 	ethSrcMAC net.HardwareAddr
 	arpDstMAC net.HardwareAddr
@@ -20,11 +21,13 @@ type ARPSender struct {
 	handle    *pcap.Handle
 }
 
-func newARPSender(iface *net.Interface) (models.Sender, error) {
+//NewRecvSender 构造收发函数
+func NewRecvSender(iface *net.Interface) (models.RecvSender, error) {
 	handle, err := pcap.OpenLive(iface.Name, 65535, true, 1000)
 	if err != nil {
 		return nil, fmt.Errorf("OpenLive Error:%v", err)
 	}
+	defer handle.Close()
 	myIP, err := utils.GetIPv4ByIface(iface)
 	if err != nil {
 		return nil, fmt.Errorf("IPv4 error:%v", err)
@@ -38,7 +41,7 @@ func newARPSender(iface *net.Interface) (models.Sender, error) {
 		return nil, err
 	}
 	//构造广播包
-	return &ARPSender{
+	return &RecvSender{
 		ethSrcMAC: iface.HardwareAddr,
 		ethDstMAC: ethDstMAC,
 		arpSrcMAC: iface.HardwareAddr,
@@ -49,12 +52,11 @@ func newARPSender(iface *net.Interface) (models.Sender, error) {
 }
 
 //Send 发送数据包
-func (s *ARPSender) Send(dstIP net.IP) error {
+func (s *RecvSender) Send(dstIP net.IP) error {
 	return SendARP(s.handle, s.ethDstMAC, s.ethSrcMAC, s.arpDstMAC, s.arpSrcMAC, dstIP, s.arpSrcIP, layers.ARPRequest)
 }
 
 //Recv 接收数据包
-func (s *ARPSender) Recv(out chan *models.Host) error {
-	ReceiveARP(s.handle, s.ethSrcMAC, out, true)
-	return nil
+func (s *RecvSender) Recv(ctx context.Context) <-chan *models.Host {
+	return ReceiveARP(ctx, s.handle, s.ethSrcMAC, false)
 }
