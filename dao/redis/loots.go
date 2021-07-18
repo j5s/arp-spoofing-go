@@ -34,7 +34,7 @@ func (l *LootsSaver) Add(loot *models.Loot) error {
 }
 
 //GetAll 获取所有战利品
-func (l *LootsSaver) GetAll(loot *models.Loot) ([]models.Loot, error) {
+func (l *LootsSaver) GetAll() ([]models.Loot, error) {
 	items, err := rdb.SMembers(l.key).Result()
 	if err != nil {
 		return nil, err
@@ -49,4 +49,13 @@ func (l *LootsSaver) GetAll(loot *models.Loot) ([]models.Loot, error) {
 		loots = append(loots, temp)
 	}
 	return loots, nil
+}
+
+//ClearAll 清除所有战利品
+func (l *LootsSaver) ClearAll() error {
+	_, err := rdb.Del(l.key).Result()
+	if err != nil {
+		return err
+	}
+	return nil
 }

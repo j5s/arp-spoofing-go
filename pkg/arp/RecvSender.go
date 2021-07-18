@@ -27,7 +27,7 @@ func NewRecvSender(iface *net.Interface) (models.RecvSender, error) {
 	if err != nil {
 		return nil, fmt.Errorf("OpenLive Error:%v", err)
 	}
-	defer handle.Close()
+	// defer handle.Close() //不能关，还要用
 	myIP, err := utils.GetIPv4ByIface(iface)
 	if err != nil {
 		return nil, fmt.Errorf("IPv4 error:%v", err)

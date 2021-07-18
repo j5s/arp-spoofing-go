@@ -27,13 +27,8 @@ func Init(shell *ishell.Shell) {
 	hostCmd := &ishell.Cmd{
 		Name: "hosts",
 		Help: "主机管理功能",
-		Func: nil,
-	}
-	hostCmd.AddCmd(&ishell.Cmd{
-		Name: "show",
-		Help: "展示所有主机",
 		Func: controllers.ShowHostsHandler,
-	})
+	}
 	hostCmd.AddCmd(&ishell.Cmd{
 		Name: "clear",
 		Help: "清空所有主机",
@@ -65,13 +60,8 @@ func Init(shell *ishell.Shell) {
 	cutCmd := &ishell.Cmd{
 		Name: "cut",
 		Help: "通过ARP欺骗切断局域网内某台主机的网络",
-		Func: nil,
-	}
-	cutCmd.AddCmd(&ishell.Cmd{
-		Name: "start",
-		Help: "开始攻击",
 		Func: controllers.CutHandler,
-	})
+	}
 	cutCmd.AddCmd(&ishell.Cmd{
 		Name: "stop",
 		Help: "停止攻击",
@@ -82,13 +72,8 @@ func Init(shell *ishell.Shell) {
 	sniffCmd := &ishell.Cmd{
 		Name: "sniff",
 		Help: "嗅探用户名和密码",
-		Func: nil,
-	}
-	sniffCmd.AddCmd(&ishell.Cmd{
-		Name: "start",
-		Help: "启动敏感报文嗅探器",
 		Func: controllers.SniffHandler,
-	})
+	}
 	sniffCmd.AddCmd(&ishell.Cmd{
 		Name: "stop",
 		Help: "停止敏感报文嗅探器",
@@ -101,5 +86,14 @@ func Init(shell *ishell.Shell) {
 	})
 	shell.AddCmd(sniffCmd)
 	//loot 敏感信息
-	shell.AddCmd(&ishell.Cmd{})
+	lootCmd := &ishell.Cmd{
+		Name: "loot",
+		Help: "查看嗅探到的敏感信息",
+		Func: controllers.ShowLootHandler,
+	}
+	lootCmd.AddCmd(&ishell.Cmd{
+		Name: "clear",
+		Func: controllers.ClearLootHandler,
+	})
+	shell.AddCmd(lootCmd)
 }
