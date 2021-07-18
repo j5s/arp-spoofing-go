@@ -23,7 +23,7 @@ type RecvSender struct {
 
 //NewRecvSender 构造收发函数
 func NewRecvSender(iface *net.Interface) (models.RecvSender, error) {
-	handle, err := pcap.OpenLive(iface.Name, 65535, true, 1000)
+	handle, err := pcap.OpenLive(iface.Name, 1600, true, pcap.BlockForever)
 	if err != nil {
 		return nil, fmt.Errorf("OpenLive Error:%v", err)
 	}

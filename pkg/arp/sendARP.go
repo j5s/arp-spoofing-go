@@ -2,6 +2,7 @@ package arp
 
 import (
 	"fmt"
+	"log"
 	"net"
 
 	"github.com/google/gopacket"
@@ -33,11 +34,14 @@ func SendARP(handle *pcap.Handle, ethDstMAC, ethSrcMAC, arpDstMAC, arpSrcMAC net
 		ComputeChecksums: true,
 	}
 	if err := gopacket.SerializeLayers(buf, opts, &eth, &arp); err != nil {
-		return fmt.Errorf("序列化失败:%s", err)
+		log.Println("gopacket.SerializeLayers failed,err:", err)
+		return err
 	}
 	//发送ARP数据包
-	if err := handle.WritePacketData(buf.Bytes()); err != nil {
-		return fmt.Errorf("WritePacketData失败:%s", err)
+	err := handle.WritePacketData(buf.Bytes())
+	if err != nil {
+		fmt.Println("handle.WritePacketData failed,err:", err)
+		return err
 	}
 	return nil
 }

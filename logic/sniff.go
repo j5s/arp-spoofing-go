@@ -26,7 +26,7 @@ func Sniff() error {
 		return err
 	}
 	//1.设置网卡为混杂模式并监听
-	handle, err := pcap.OpenLive(ifname, 1600, true, pcap.BlockForever)
+	handle, err := pcap.OpenLive(ifname, 65535, true, pcap.BlockForever)
 	if err != nil {
 		log.Printf("OpenLive Error:%v", err)
 		return err
@@ -45,8 +45,6 @@ func Sniff() error {
 		log.Println("handle.SetBPFFilter failed,err:", err)
 		return err
 	}
-	//3.创建数据源
-	src := gopacket.NewPacketSource(handle, layers.LayerTypeEthernet)
 	//4.获取敏感信息并存储到数据库中
 	ctx, cancel := context.WithCancel(context.Background())
 	vars.SniffCancelFunc = cancel
@@ -55,7 +53,7 @@ func Sniff() error {
 		defer func() {
 			debug.Println("敏感报文存储器退出:", routine.GetGID())
 		}()
-		for loot := range DigPacket(ctx, src) {
+		for loot := range DigPacket(ctx, handle) {
 			//1.检查上级是否通知退出
 			select {
 			case <-ctx.Done():
@@ -75,7 +73,7 @@ func Sniff() error {
 }
 
 //DigPacket 从报文中挖掘敏感信息
-func DigPacket(ctx context.Context, src *gopacket.PacketSource) <-chan *models.Loot {
+func DigPacket(ctx context.Context, handle *pcap.Handle) <-chan *models.Loot {
 	outCh := make(chan *models.Loot, 10240)
 	go func() {
 		debug.Println("启动了一个嗅探敏感信息的协程:", routine.GetGID())
@@ -83,14 +81,11 @@ func DigPacket(ctx context.Context, src *gopacket.PacketSource) <-chan *models.L
 			debug.Println("嗅探敏感信息的协程退出:", routine.GetGID())
 			vars.SniffCancelFunc = nil
 		}()
+		//3.创建数据源
+		src := gopacket.NewPacketSource(handle, layers.LayerTypeIPv4)
 		for packet := range src.Packets() {
-			//0 检查父协程是否通知结束工作
-			select {
-			case <-ctx.Done():
-				debug.Println("上级通知退出")
-				return
-			default:
-			}
+			log.Println(1)
+
 			//4.1解析IP层获取 srcIP 和 dstIP
 			ipLayer := packet.Layer(layers.LayerTypeIPv4)
 			if ipLayer == nil {
@@ -125,6 +120,13 @@ func DigPacket(ctx context.Context, src *gopacket.PacketSource) <-chan *models.L
 				DstPort: dstPort,
 				Keyword: keyword,
 				Payload: string(payload),
+			}
+			//0 检查父协程是否通知结束工作
+			select {
+			case <-ctx.Done():
+				debug.Println("上级通知退出")
+				return
+			default:
 			}
 		}
 	}()
