@@ -8,6 +8,7 @@ import (
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
 	"github.com/google/gopacket/pcap"
+	"github.com/google/gopacket/tcpassembly"
 )
 
 //Run 启动http监听程序
@@ -25,21 +26,24 @@ func Run() {
 	packetSource := gopacket.NewPacketSource(handle, handle.LinkType())
 	packetCh := packetSource.Packets()
 	ticker := time.Tick(time.Minute)
+
+	streamFactory := &httpStreamFactory{}
+	streamPool := tcpassembly.NewStreamPool(streamFactory)
+	assembler := tcpassembly.NewAssembler(streamPool)
 	for {
 		select {
 		case packet := <-packetCh:
-			if packet.NetworkLayer() == nil {
+			if packet == nil {
+				return
+			}
+			if packet.NetworkLayer() == nil || packet.TransportLayer() == nil || packet.TransportLayer().LayerType() != layers.LayerTypeTCP || packet.ApplicationLayer() == nil {
 				continue
 			}
-			if packet.TransportLayer() == nil {
-				continue
-			}
-			if packet.TransportLayer() != layers.LayerTypeTCP {
-				continue
-			}
-
+			tcp := packet.TransportLayer().(*layers.TCP)
+			//将TCP包重组到流中
+			assembler.AssembleWithTimestamp(packet.NetworkLayer().NetworkFlow(), tcp, packet.Metadata().Timestamp)
 		case <-ticker:
-
+			assembler.FlushOlderThan(time.Now().Add(time.Second * -20))
 		}
 	}
 }
