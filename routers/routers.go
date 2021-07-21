@@ -96,4 +96,10 @@ func Init(shell *ishell.Shell) {
 		Func: controllers.ClearLootHandler,
 	})
 	shell.AddCmd(lootCmd)
+	//webspy 嗅探web请求
+	shell.AddCmd(&ishell.Cmd{
+		Name: "webspy",
+		Help: "嗅探web请求",
+		Func: controllers.WebSpyHandler,
+	})
 }

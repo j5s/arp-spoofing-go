@@ -17,5 +17,9 @@
         "db": 0,
         "passwd": "",
         "pool_size": 100
+    },
+    "webspy":{
+        "port":8000
     }
+
 }
