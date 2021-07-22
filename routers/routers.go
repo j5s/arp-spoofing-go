@@ -113,4 +113,11 @@ func Init(shell *ishell.Shell) {
 		Func: controllers.StopWebSpyHandler,
 	})
 	shell.AddCmd(webspyCmd)
+	//中间人攻击模块
+	shell.AddCmd(&ishell.Cmd{
+		Name: "middle-attack",
+		Help: "中间人攻击",
+		Func: controllers.MiddleAttackHandler,
+	})
+
 }
