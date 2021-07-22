@@ -1,16 +1,22 @@
 package server
 
 import (
+	"ARPSpoofing/dao/memory"
+	"encoding/json"
 	"log"
-	"time"
 
 	"github.com/gorilla/websocket"
 )
 
 //writeTo 向Conn中写
 func writeTo(conn *websocket.Conn) {
-	for range time.Tick(time.Second * 2) {
-		if err := conn.WriteMessage(websocket.TextMessage, []byte("happy hacking")); err != nil {
+	for data := range memory.DataCh {
+		datastr, err := json.Marshal(data)
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+		if err := conn.WriteMessage(websocket.TextMessage, datastr); err != nil {
 			log.Println("conn write failed,err:", err)
 			return
 		}

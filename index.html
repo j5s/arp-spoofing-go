@@ -3,203 +3,81 @@
 
 <head>
     <title>webspy</title>
-    <style type="text/css">
+    <style>
+        html,
         body {
-            font-family: 'trebuchet MS', 'Lucida sans', Arial;
-            font-size: 14px;
-            color: #444;
+            background: black;
+            color: limegreen;
         }
 
-        table {
-            *border-collapse: collapse;
-            /* IE7 and lower */
-            border-spacing: 0;
-            width: 100%;
+        div {
+            overflow: scroll;
         }
 
-        .bordered {
-            border: solid #ccc 1px;
-            -moz-border-radius: 6px;
-            -webkit-border-radius: 6px;
-            border-radius: 6px;
-            -webkit-box-shadow: 0 1px 1px #ccc;
-            -moz-box-shadow: 0 1px 1px #ccc;
-            box-shadow: 0 1px 1px #ccc;
+        .packet {
+            border: 1px solid limegreen;
+            margin: 20px;
+            padding: 20px;
         }
 
-        .bordered tr:hover {
-            background: #fbf8e9;
-            -o-transition: all 0.1s ease-in-out;
-            -webkit-transition: all 0.1s ease-in-out;
-            -moz-transition: all 0.1s ease-in-out;
-            -ms-transition: all 0.1s ease-in-out;
-            transition: all 0.1s ease-in-out;
+        .m-b-2 {
+            margin-bottom: 20px;
         }
 
-        .bordered td,
-        .bordered th {
-            border-left: 1px solid #ccc;
-            border-top: 1px solid #ccc;
-            padding: 10px;
-            text-align: left;
+        .method {
+            color: deeppink
         }
 
-        .bordered th {
-            background-color: #dce9f9;
-            background-image: -webkit-gradient(linear, left top, left bottom, from(#ebf3fc), to(#dce9f9));
-            background-image: -webkit-linear-gradient(top, #ebf3fc, #dce9f9);
-            background-image: -moz-linear-gradient(top, #ebf3fc, #dce9f9);
-            background-image: -ms-linear-gradient(top, #ebf3fc, #dce9f9);
-            background-image: -o-linear-gradient(top, #ebf3fc, #dce9f9);
-            background-image: linear-gradient(top, #ebf3fc, #dce9f9);
-            -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, .8) inset;
-            -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, .8) inset;
-            box-shadow: 0 1px 0 rgba(255, 255, 255, .8) inset;
-            border-top: none;
-            text-shadow: 0 1px 0 rgba(255, 255, 255, .5);
-        }
-
-        .bordered td:first-child,
-        .bordered th:first-child {
-            border-left: none;
-        }
-
-        .bordered th:first-child {
-            -moz-border-radius: 6px 0 0 0;
-            -webkit-border-radius: 6px 0 0 0;
-            border-radius: 6px 0 0 0;
-        }
-
-        .bordered th:last-child {
-            -moz-border-radius: 0 6px 0 0;
-            -webkit-border-radius: 0 6px 0 0;
-            border-radius: 0 6px 0 0;
-        }
-
-        .bordered th:only-child {
-            -moz-border-radius: 6px 6px 0 0;
-            -webkit-border-radius: 6px 6px 0 0;
-            border-radius: 6px 6px 0 0;
-        }
-
-        .bordered tr:last-child td:first-child {
-            -moz-border-radius: 0 0 0 6px;
-            -webkit-border-radius: 0 0 0 6px;
-            border-radius: 0 0 0 6px;
-        }
-
-        .bordered tr:last-child td:last-child {
-            -moz-border-radius: 0 0 6px 0;
-            -webkit-border-radius: 0 0 6px 0;
-            border-radius: 0 0 6px 0;
-        }
-
-        /*----------------------*/
-        .zebra td,
-        .zebra th {
-            padding: 10px;
-            border-bottom: 1px solid #f2f2f2;
-        }
-
-        .zebra tbody tr:nth-child(even) {
-            background: #f5f5f5;
-            -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, .8) inset;
-            -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, .8) inset;
-            box-shadow: 0 1px 0 rgba(255, 255, 255, .8) inset;
-        }
-
-        .zebra th {
-            text-align: left;
-            text-shadow: 0 1px 0 rgba(255, 255, 255, .5);
-            border-bottom: 1px solid #ccc;
-            background-color: #eee;
-            background-image: -webkit-gradient(linear, left top, left bottom, from(#f5f5f5), to(#eee));
-            background-image: -webkit-linear-gradient(top, #f5f5f5, #eee);
-            background-image: -moz-linear-gradient(top, #f5f5f5, #eee);
-            background-image: -ms-linear-gradient(top, #f5f5f5, #eee);
-            background-image: -o-linear-gradient(top, #f5f5f5, #eee);
-            background-image: linear-gradient(top, #f5f5f5, #eee);
-        }
-
-        .zebra th:first-child {
-            -moz-border-radius: 6px 0 0 0;
-            -webkit-border-radius: 6px 0 0 0;
-            border-radius: 6px 0 0 0;
-        }
-
-        .zebra th:last-child {
-            -moz-border-radius: 0 6px 0 0;
-            -webkit-border-radius: 0 6px 0 0;
-            border-radius: 0 6px 0 0;
-        }
-
-        .zebra th:only-child {
-            -moz-border-radius: 6px 6px 0 0;
-            -webkit-border-radius: 6px 6px 0 0;
-            border-radius: 6px 6px 0 0;
-        }
-
-        .zebra tfoot td {
-            border-bottom: 0;
-            border-top: 1px solid #fff;
-            background-color: #f1f1f1;
-        }
-
-        .zebra tfoot td:first-child {
-            -moz-border-radius: 0 0 0 6px;
-            -webkit-border-radius: 0 0 0 6px;
-            border-radius: 0 0 0 6px;
-        }
-
-        .zebra tfoot td:last-child {
-            -moz-border-radius: 0 0 6px 0;
-            -webkit-border-radius: 0 0 6px 0;
-            border-radius: 0 0 6px 0;
-        }
-
-        .zebra tfoot td:only-child {
-            -moz-border-radius: 0 0 6px 6px;
-            -webkit-border-radius: 0 0 6px 6px;
-            border-radius: 0 0 6px 6px;
+        .key {
+            color: yellow
         }
     </style>
 </head>
 
 <body>
-    <table class="bordered" align="left">
-        <thead>
-            <tr>
-                <th>Data</th>
-            </tr>
-        </thead>
-        <tr id="xsec_webspy">
-            {{ .Data }}
-        </tr>
-    </table>
+    <div id="data">
+        {{ .Data }}
+    </div>
     <script type="text/javascript">
         (function () {
-            var data = document.getElementById("xsec_webspy");
-            //appendData 向tr中添加数据
-            function appendData(item) {
-                var doScroll = data.scrollTop > data.scrollHeight - data.clientHeight - 1;
-                data.appendChild(item);
-                if (doScroll) {
-                    data.scrollTop = data.scrollHeight - data.clientHeight;
-                }
-            };
+            var data = document.getElementById("data");
             //连接服务器的websocket
             var conn = new WebSocket("ws://{{.Host}}/ws");
             //当服务器websocket关闭时
             conn.onclose = function (evt) {
-                var item = document.createElement("tr");
-                item.innerHTML = "<td><b>Connection closed.</b></td>";
+                var item = document.createElement("div");
+                item.innerHTML = "Connection closed";
                 appendData(item);
             }
             //当收到服务器websocket发来的消息时
             conn.onmessage = function (evt) {
-                var item = document.createElement("tr");
-                item.innerHTML = "<td><pre>" + evt.data + "</pre></td>";
-                appendData(item);
+                var div = document.createElement("div");
+                div.className = "packet"
+                let request = JSON.parse(evt.data)
+                console.log(request)
+                //1.渲染流
+                let stream = document.createElement("div")
+                stream.innerHTML = `<span class="key">${request.Time}</span>  <span>${request.Stream}</span>` 
+                div.appendChild(stream)
+                //2.渲染请求的URL
+                let url = document.createElement("div")
+                url.className = "m-b-2"
+                url.innerHTML = `<a target="_blank" href="${request.URL}">${request.URL}</a>`
+                div.appendChild(url)
+                //3.渲染请求的头部
+                let header = document.createElement("div")
+                header.className = "m-b-2"
+                header.innerHTML += `<div class="method">${request.FirstLine}</div>`
+                for (let key in request.Header) {
+                    header.innerHTML += `<div><span class="key">${key}:</span> ${request.Header[key]}</div>`
+                }
+                div.appendChild(header)
+                //3.渲染请求的体部
+                let body = document.createElement("div")
+                body.innerText = request.Body
+                div.appendChild(body)
+                //4.将div添加到data区域
+                data.appendChild(div)
             };
         })();
     </script>

@@ -2,6 +2,8 @@ package assembly
 
 import (
 	"ARPSpoofing/settings"
+	"context"
+	"fmt"
 	"log"
 	"time"
 
@@ -12,7 +14,7 @@ import (
 )
 
 //Run 启动http监听程序
-func Run() {
+func Run(ctx context.Context) {
 	ifaceName, err := settings.Options.Get("ifname")
 	if err != nil {
 		log.Println("请先选择网卡")
@@ -23,6 +25,7 @@ func Run() {
 		log.Println("pcap.OpenLive failed,err:", err)
 		return
 	}
+	defer handle.Close()
 	packetSource := gopacket.NewPacketSource(handle, handle.LinkType())
 	packetCh := packetSource.Packets()
 	ticker := time.Tick(time.Minute)
@@ -44,6 +47,9 @@ func Run() {
 			assembler.AssembleWithTimestamp(packet.NetworkLayer().NetworkFlow(), tcp, packet.Metadata().Timestamp)
 		case <-ticker:
 			assembler.FlushOlderThan(time.Now().Add(time.Second * -20))
+		case <-ctx.Done():
+			fmt.Printf("\r[*] 嗅探协程退出成功\n")
+			return
 		}
 	}
 }
