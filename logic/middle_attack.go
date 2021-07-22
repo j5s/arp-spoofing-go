@@ -104,6 +104,7 @@ func MiddleAttack(alice, bob, gateway string) error {
 
 			// fmt.Println("修改前：")
 			// fmt.Println(packet.String())
+			//fmt.Println(packet.Data())
 			//目标ip不是本机，转发（修改源mac和目的mac）
 			ethlayer := packet.Layer(layers.LayerTypeEthernet)
 			eth := ethlayer.(*layers.Ethernet)
@@ -139,6 +140,7 @@ func MiddleAttack(alice, bob, gateway string) error {
 			}
 			// fmt.Println("修改后：")
 			// fmt.Println(packet.String())
+			// fmt.Println(packet.Data())
 			err := handle.WritePacketData(packet.Data())
 			if err != nil {
 				log.Println("handler.WritePakectData failed,err:", err)
