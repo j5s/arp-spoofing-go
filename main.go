@@ -3,6 +3,7 @@ package main
 import (
 	"ARPSpoofing/dao/redis"
 	"ARPSpoofing/debug"
+	"ARPSpoofing/logo"
 	"ARPSpoofing/routers"
 	"ARPSpoofing/settings"
 	"log"
@@ -13,9 +14,9 @@ import (
 
 func main() {
 	shell := ishell.NewWithConfig(&readline.Config{
-		Prompt: "arp-spoofing > ",
+		Prompt: "阿弥陀佛 > ",
 	})
-	shell.Println("happy hacking")
+	logo.Show(logo.LogoFile)
 	//1.初始化配置
 	if err := settings.Init(); err != nil {
 		log.Println("settings.Init failed,err:", err)

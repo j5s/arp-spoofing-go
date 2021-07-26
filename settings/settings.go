@@ -18,8 +18,8 @@ func Init() (err error) {
 	//指定配置文件
 	viper.SetConfigName("config")
 	viper.SetConfigType("json")
-	viper.AddConfigPath("/etc/arp/")
 	viper.AddConfigPath("./conf/")
+	viper.AddConfigPath("/etc/arp/")
 
 	//读取配置文件
 	err = viper.ReadInConfig()

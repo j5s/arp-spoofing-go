@@ -9,7 +9,8 @@ import (
 
 //Println debug输出
 func Println(a ...interface{}) (n int, err error) {
-	if viper.GetBool("debug") {
+	if true == viper.GetBool("debug") {
+		fmt.Println(viper.GetBool("debug"))
 		newA := make([]interface{}, 0, len(a)+1)
 		newA = append(newA, "[DEBUG]")
 		newA = append(newA, a...)
@@ -20,7 +21,7 @@ func Println(a ...interface{}) (n int, err error) {
 
 //Printf 格式化debug输出
 func Printf(format string, a ...interface{}) (n int, err error) {
-	if viper.GetBool("debug") {
+	if true == viper.GetBool("debug") {
 		newA := make([]interface{}, 0, len(a)+1)
 		newA = append(newA, "[DEBUG]")
 		newA = append(newA, a...)
