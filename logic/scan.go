@@ -16,6 +16,7 @@ import (
 	"time"
 
 	"github.com/abiosoft/ishell"
+	manuf "github.com/timest/gomanuf"
 )
 
 //Scan ARP扫描
@@ -31,6 +32,8 @@ func Scan(c *ishell.Context, ipList []net.IP, ifname string, method string) erro
 		debug.Println("启动了一个存储数据的协程:", routine.GetGID())
 		defer debug.Println("存储数据的协程退出:", routine.GetGID())
 		for host := range sender.Recv(ctx) {
+			//查询mac地址对应的厂商信息
+			host.MACInfo = manuf.Search(host.MAC)
 			err = redis.NewHosts().Add(host)
 			if err != nil {
 				log.Println("redis add Host failed,err:", err)

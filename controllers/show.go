@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"ARPSpoofing/settings"
+	"ARPSpoofing/vars"
 	"fmt"
 	"log"
 
@@ -44,5 +45,16 @@ func ShowIfnamesHandler(c *ishell.Context) {
 		}
 		fmt.Println()
 	}
+}
 
+//ShowCuttedHandler 显示所有被切断的主机
+func ShowCuttedHandler(c *ishell.Context) {
+	if len(vars.HostCancelMap) == 0 {
+		c.Println("暂无被切断的主机")
+		return
+	}
+	c.Println(vars.Yellow("Cutted Hosts:"))
+	for key := range vars.HostCancelMap {
+		c.Println(key)
+	}
 }

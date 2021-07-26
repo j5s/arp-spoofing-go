@@ -10,6 +10,7 @@ import (
 	"github.com/abiosoft/ishell"
 )
 
+//CutHandler 断网功能
 func CutHandler(c *ishell.Context) {
 	//1.接收参数
 	gateway, err := settings.Options.Get("gateway")
@@ -23,7 +24,19 @@ func CutHandler(c *ishell.Context) {
 		c.Println("redis get ip list failed,err:", err)
 		return
 	}
-	targetIndex := c.MultiChoice(ipList, "which host do you want to attack?")
+	var noCuttedList []string = make([]string, 0)
+	for i := range ipList {
+		_, exist := vars.HostCancelMap[ipList[i]]
+		if exist {
+			continue
+		}
+		noCuttedList = append(noCuttedList, ipList[i])
+	}
+	if len(noCuttedList) == 0 {
+		c.Println("所有主机都被切断了")
+		return
+	}
+	targetIndex := c.MultiChoice(noCuttedList, "which host do you want to attack?")
 
 	//3.选择欺骗方式
 	methods := []string{
@@ -38,7 +51,7 @@ func CutHandler(c *ishell.Context) {
 		string(models.Reply),
 	}
 	typeIndex := c.MultiChoice(packetTypes, "Send Reply packet or Request packet?")
-	c.Printf("target:%s\n", ipList[targetIndex])
+	c.Printf("target:%s\n", noCuttedList[targetIndex])
 	c.Printf("gateway:%s\n", gateway)
 	c.Printf("deceit way:%s\n", methods[methodIndex])
 	c.Printf("packet type:%s\n", packetTypes[typeIndex])
@@ -46,7 +59,7 @@ func CutHandler(c *ishell.Context) {
 	err = logic.Cut(models.DeceitWay(methods[methodIndex]),
 		models.PacketType(packetTypes[typeIndex]),
 		gateway,
-		ipList[targetIndex])
+		noCuttedList[targetIndex])
 	if err != nil {
 		c.Println(err)
 		return

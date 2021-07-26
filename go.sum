@@ -79,6 +79,8 @@ github.com/fatih/structs v1.1.0 h1:Q7juDM0QtcnhCpeyLGQKyg4TOIghuNXrkL32pHAUMxo=
 github.com/fatih/structs v1.1.0/go.mod h1:9NiDSp5zOcgEDl+j00MP/WkGVPOlPRLejGD8Ga6PJ7M=
 github.com/flynn-archive/go-shlex v0.0.0-20150515145356-3f9db97f8568 h1:BMXYYRWTLOJKlh+lOBt6nUQgXAfB7oVIQt5cNreqSLI=
 github.com/flynn-archive/go-shlex v0.0.0-20150515145356-3f9db97f8568/go.mod h1:rZfgFAXFS/z/lEd6LJmf9HVZ1LkgYiHx5pHhV5DR16M=
+github.com/franela/goreq v0.0.0-20171204163338-bcd34c9993f8 h1:a9ENSRDFBUPkJ5lCgVZh26+ZbGyoVJG7yb5SSzF5H54=
+github.com/franela/goreq v0.0.0-20171204163338-bcd34c9993f8/go.mod h1:ZhphrRTfi2rbfLwlschooIH4+wKKDR4Pdxhh+TRoA20=
 github.com/fsnotify/fsnotify v1.4.9 h1:hsms1Qyu0jgnwNXIxa+/V/PDsU6CfLf6CNO8H7IWoS4=
 github.com/fsnotify/fsnotify v1.4.9/go.mod h1:znqG4EE+3YCdAaPaxE2ZRY/06pZUdp0tY4IgpuI1SZQ=
 github.com/ghodss/yaml v1.0.0/go.mod h1:4dBDuWmgqj2HViK6kFavaiC9ZROes6MMH2rRYeMEF04=
@@ -221,6 +223,8 @@ github.com/mitchellh/mapstructure v1.4.1/go.mod h1:bFUtVrKA4DC2yAKiSyO/QUcy7e+RR
 github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=
 github.com/modern-go/reflect2 v0.0.0-20180701023420-4b7aa43c6742/go.mod h1:bx2lNnkwVCuqBIxFjflWJWanXIb3RllmbCylyMrvgv0=
 github.com/modern-go/reflect2 v1.0.1/go.mod h1:bx2lNnkwVCuqBIxFjflWJWanXIb3RllmbCylyMrvgv0=
+github.com/n0madic/macvendor v0.0.0-20210725051214-491e0ad68b0d h1:a03TXFkQotcNQ0vle5XGJ80+P69GvdVCIy+nLlqnV6Q=
+github.com/n0madic/macvendor v0.0.0-20210725051214-491e0ad68b0d/go.mod h1:5uCAkT+wQanoJm029l52IgRWGKDf+7M5F1ZhmFCLjWE=
 github.com/olekukonko/tablewriter v0.0.5 h1:P2Ga83D34wi1o9J6Wh1mRuqd4mF/x/lgBS7N7AbDhec=
 github.com/olekukonko/tablewriter v0.0.5/go.mod h1:hPp6KlRPjbx+hW8ykQs1w3UBbZlj6HuIJcUGPhkA7kY=
 github.com/pascaldekloe/goe v0.0.0-20180627143212-57f6aae5913c/go.mod h1:lzWF7FIEvWOWxwDKqyGYQf6ZUaNfKdP144TG7ZOy1lc=
@@ -262,6 +266,8 @@ github.com/thinkeridea/go-extend v1.3.2 h1:0ZImRXpJc+wBNIrNEMbTuKwIvJ6eFoeuNAewv
 github.com/thinkeridea/go-extend v1.3.2/go.mod h1:xqN1e3y1PdVSij1VZp6iPKlO8I4jLbS8CUuTySj981g=
 github.com/timest/gomanuf v0.0.0-20171028040013-3d424250f36d h1:VhibMrHZVsOSztAzviV/RWVVWRpAwx36fi8nTWL8ebI=
 github.com/timest/gomanuf v0.0.0-20171028040013-3d424250f36d/go.mod h1:9ICtas4JOTsAr+/ARR3q1ThAUku0bMgOssHf+q36vN4=
+github.com/umahmood/macvendors v0.0.0-20171210033158-3fe2f521558c h1:T7OSSjh7j67s3SJSAk89udAmk4QemL9rtPf2kcdnBC0=
+github.com/umahmood/macvendors v0.0.0-20171210033158-3fe2f521558c/go.mod h1:Jlds6LTXoaMiD75OqpJzMDmqYN+/m/gUrQ/k9nH4ZaU=
 github.com/yuin/goldmark v1.1.25/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.27/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.32/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=

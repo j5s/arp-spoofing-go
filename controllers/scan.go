@@ -12,6 +12,7 @@ import (
 
 //ScanHandler 扫描功能处理函数
 func ScanHandler(c *ishell.Context) {
+	//0.检查用户权限
 	if privileges.Check() {
 		c.Println("权限不足，不能发包，请先提升权限")
 		return

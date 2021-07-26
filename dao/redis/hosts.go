@@ -10,12 +10,14 @@ type Hosts struct {
 	key string
 }
 
+//NewHosts 扫描到的所有主机
 func NewHosts() *Hosts {
 	return &Hosts{
 		key: "hosts",
 	}
 }
 
+//Add 添加主机
 func (h *Hosts) Add(host *models.Host) error {
 	hoststr, err := json.Marshal(host)
 	if err != nil {
@@ -30,6 +32,7 @@ func (h *Hosts) Add(host *models.Host) error {
 	return nil
 }
 
+//Get 获取一个主机的详细信息
 func (h *Hosts) Get(ip string) (models.Host, error) {
 	var host models.Host
 	ret, err := rdb.HGet(h.key, ip).Result()

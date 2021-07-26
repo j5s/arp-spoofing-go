@@ -28,6 +28,11 @@ func Init(shell *ishell.Shell) {
 		Help: "展示所有网卡名",
 		Func: controllers.ShowIfnamesHandler,
 	})
+	showCmd.AddCmd(&ishell.Cmd{
+		Name: "cutted",
+		Help: "展示所有被切断的主机",
+		Func: controllers.ShowCuttedHandler,
+	})
 	shell.AddCmd(showCmd)
 	//host 主机管理
 	hostCmd := &ishell.Cmd{
