@@ -2,10 +2,12 @@ package utils
 
 import (
 	"errors"
+	"fmt"
 	"net"
+	"strings"
 )
 
-//获取分配给该网卡的内网ipv4地址
+//GetIPv4ByIface 获取分配给该网卡的内网ipv4地址
 func GetIPv4ByIface(iface *net.Interface) (net.IP, error) {
 	addrs, err := iface.Addrs() //ipv6/mask,ipv4/mask
 	if err != nil {
@@ -22,4 +24,19 @@ func GetIPv4ByIface(iface *net.Interface) (net.IP, error) {
 		}
 	}
 	return nil, errors.New("don't have ipv4 address")
+}
+
+//GetDefaultScanRangeGateway 获取默认扫描范围和网关
+func GetDefaultScanRangeGateway(ifname string) (scanRange string, gateway string, err error) {
+	iface, err := net.InterfaceByName(ifname)
+	if err != nil {
+		return "", "", err
+	}
+	myIP, err := GetIPv4ByIface(iface)
+	if err != nil {
+		return "", "", err
+	}
+	scanRange = fmt.Sprintf("%s/24", myIP.String())
+	gateway = fmt.Sprintf("%s.1", strings.Join(strings.Split(myIP.String(), ".")[:3], "."))
+	return scanRange, gateway, nil
 }

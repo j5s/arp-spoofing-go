@@ -1,7 +1,6 @@
 package main
 
 import (
-	"ARPSpoofing/dao/mysql"
 	"ARPSpoofing/dao/redis"
 	"ARPSpoofing/debug"
 	"ARPSpoofing/routers"
@@ -23,13 +22,13 @@ func main() {
 		return
 	}
 	//2.连接mysql
-	if err := mysql.Init(); err != nil {
-		log.Println("mysql init failed,err:", err)
-		return
-	}
-	defer mysql.Close()
-	debug.Println("mysql 数据库连接成功")
-
+	// if err := mysql.Init(); err != nil {
+	// 	log.Println("mysql init failed,err:", err)
+	// 	return
+	// }
+	// defer mysql.Close()
+	// debug.Println("mysql 数据库连接成功")
+	//3.连接redis
 	if err := redis.Init(); err != nil {
 		log.Println("redis init failed,err:", err)
 		return
