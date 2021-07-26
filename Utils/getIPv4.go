@@ -3,8 +3,11 @@ package utils
 import (
 	"errors"
 	"fmt"
+	"log"
 	"net"
 	"strings"
+
+	"github.com/google/gopacket/pcap"
 )
 
 //GetIPv4ByIface 获取分配给该网卡的内网ipv4地址
@@ -26,17 +29,28 @@ func GetIPv4ByIface(iface *net.Interface) (net.IP, error) {
 	return nil, errors.New("don't have ipv4 address")
 }
 
-//GetDefaultScanRangeGateway 获取默认扫描范围和网关
-func GetDefaultScanRangeGateway(ifname string) (scanRange string, gateway string, err error) {
-	iface, err := net.InterfaceByName(ifname)
+//GetDefaultOptions 获取默认扫描范围和网关
+func GetDefaultOptions() (ifname string, scanRange string, gateway string, err error) {
+	var myIP net.IP
+	devices, err := pcap.FindAllDevs()
 	if err != nil {
-		return "", "", err
+		log.Println("pcap.FindAllDevs failed,err:", err)
+		return ifname, scanRange, gateway, err
 	}
-	myIP, err := GetIPv4ByIface(iface)
-	if err != nil {
-		return "", "", err
+	if len(devices) == 0 {
+		return ifname, scanRange, gateway, err
 	}
-	scanRange = fmt.Sprintf("%s/24", myIP.String())
-	gateway = fmt.Sprintf("%s.1", strings.Join(strings.Split(myIP.String(), ".")[:3], "."))
-	return scanRange, gateway, nil
+	ifname = devices[0].Name
+	for _, addr := range devices[0].Addresses {
+		ipv4 := addr.IP.To4()
+		if ipv4 != nil {
+			myIP = ipv4
+			break
+		}
+	}
+	if myIP != nil {
+		scanRange = fmt.Sprintf("%s/24", myIP.String())
+		gateway = fmt.Sprintf("%s.1", strings.Join(strings.Split(myIP.String(), ".")[:3], "."))
+	}
+	return ifname, scanRange, gateway, nil
 }

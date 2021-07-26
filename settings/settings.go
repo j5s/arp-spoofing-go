@@ -28,10 +28,9 @@ func Init() (err error) {
 		return err
 	}
 	//获取默认网卡、扫描范围、网关
-	defaultIfname := utils.GetDefaultIfname()
-	defaultScanRange, defaultGateway, err := utils.GetDefaultScanRangeGateway(defaultIfname)
+	defaultIfname, defaultScanRange, defaultGateway, err := utils.GetDefaultOptions()
 	if err != nil {
-		fmt.Println("utils.GetDefaultScanRangeGateway(defaultIfname) failed,err:", err)
+		fmt.Println("utils.GetDefaultOptions() failed,err:", err)
 		return err
 	}
 	//初始化扫描配置项
