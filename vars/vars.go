@@ -1,10 +1,7 @@
 package vars
 
-import "context"
-
-//ARPScanOptions ARP扫描配置
-var (
-	IfaceNames []string
+import (
+	"context"
 )
 
 //HostCancelMap 主机和通知退出函数之间的映射

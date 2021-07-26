@@ -15,12 +15,12 @@ type RecvSender struct {
 }
 
 //NewRecvSender 构造函数
-func NewRecvSender(iface *net.Interface) (models.RecvSender, error) {
-	udpSender, err := udp.NewRecvSender(iface)
+func NewRecvSender(ifname string) (models.RecvSender, error) {
+	udpSender, err := udp.NewRecvSender(ifname)
 	if err != nil {
 		return nil, err
 	}
-	arpSender, err := arp.NewRecvSender(iface)
+	arpSender, err := arp.NewRecvSender(ifname)
 	if err != nil {
 		return nil, err
 	}

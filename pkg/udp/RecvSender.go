@@ -22,12 +22,12 @@ type RecvSender struct {
 }
 
 //NewRecvSender 构造函数
-func NewRecvSender(iface *net.Interface) (models.RecvSender, error) {
-	handle, err := pcap.OpenLive(iface.Name, 65535, true, 1000)
+func NewRecvSender(ifname string) (models.RecvSender, error) {
+	handle, err := pcap.OpenLive(ifname, 65535, true, 1000)
 	if err != nil {
 		return nil, fmt.Errorf("OpenLive Error:%v", err)
 	}
-	myIP, err := utils.GetIPv4ByIface(iface)
+	myIP, err := utils.GetIPv4(ifname)
 	if err != nil {
 		return nil, err
 	}

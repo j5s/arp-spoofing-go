@@ -10,20 +10,23 @@ import (
 	"github.com/google/gopacket/pcap"
 )
 
-//GetIPv4ByIface 获取分配给该网卡的内网ipv4地址
-func GetIPv4ByIface(iface *net.Interface) (net.IP, error) {
-	addrs, err := iface.Addrs() //ipv6/mask,ipv4/mask
+//GetIPv4 获取分配给该网卡的内网ipv4地址
+func GetIPv4(device string) (net.IP, error) {
+	devices, err := pcap.FindAllDevs()
 	if err != nil {
+		log.Println("pcap.FindAllDevs failed,err:", err)
 		return nil, err
 	}
-
-	for _, addr := range addrs {
-		ipmask, ok := addr.(*net.IPNet)
-		if ok {
-			ipv4 := ipmask.IP.To4()
-			if ipv4 != nil {
-				return ipv4, nil
+	for i := range devices {
+		if devices[i].Name != device {
+			continue
+		}
+		for _, addr := range devices[i].Addresses {
+			ipv4 := addr.IP.To4()
+			if ipv4 == nil {
+				continue
 			}
+			return ipv4, nil
 		}
 	}
 	return nil, errors.New("don't have ipv4 address")
@@ -32,6 +35,7 @@ func GetIPv4ByIface(iface *net.Interface) (net.IP, error) {
 //GetDefaultOptions 获取默认扫描范围和网关
 func GetDefaultOptions() (ifname string, scanRange string, gateway string, err error) {
 	var myIP net.IP
+	//获取所有设备
 	devices, err := pcap.FindAllDevs()
 	if err != nil {
 		log.Println("pcap.FindAllDevs failed,err:", err)
@@ -45,6 +49,7 @@ func GetDefaultOptions() (ifname string, scanRange string, gateway string, err e
 		ipv4 := addr.IP.To4()
 		if ipv4 != nil {
 			myIP = ipv4
+
 			break
 		}
 	}

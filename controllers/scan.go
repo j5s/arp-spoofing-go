@@ -6,7 +6,6 @@ import (
 	"ARPSpoofing/settings"
 	"ARPSpoofing/utils"
 	"log"
-	"net"
 
 	"github.com/abiosoft/ishell"
 )
@@ -40,13 +39,9 @@ func ScanHandler(c *ishell.Context) {
 		log.Println(err)
 		return
 	}
-	iface, err := net.InterfaceByName(ifname)
-	if err != nil {
-		log.Println(err)
-		return
-	}
+
 	// 3.业务逻辑层
-	if err := logic.Scan(c, ipList, iface, method); err != nil {
+	if err := logic.Scan(c, ipList, ifname, method); err != nil {
 		log.Println(err)
 		return
 	}

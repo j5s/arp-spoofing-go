@@ -5,6 +5,7 @@ import (
 	"ARPSpoofing/pkg/arp"
 	"ARPSpoofing/settings"
 	"ARPSpoofing/utils"
+	"fmt"
 	"log"
 	"net"
 	"time"
@@ -20,15 +21,14 @@ func MiddleAttack(alice, bob, gateway string) error {
 		log.Println(err)
 		return err
 	}
-	iface, err := net.InterfaceByName(ifname)
+	//获取我的mac地址
+	myMAC, err := utils.GetMAC(ifname)
 	if err != nil {
-		log.Println(err)
+		fmt.Println("utils.GetMAC failed,err:", err)
 		return err
 	}
-	//获取我的mac地址
-	myMAC := iface.HardwareAddr
 	//获取我的IP地址
-	temp, err := utils.GetIPv4ByIface(iface)
+	temp, err := utils.GetIPv4(ifname)
 	if err != nil {
 		log.Println("get my IP failed,err:", err)
 		return err

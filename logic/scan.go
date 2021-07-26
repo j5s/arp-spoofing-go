@@ -19,8 +19,8 @@ import (
 )
 
 //Scan ARP扫描
-func Scan(c *ishell.Context, ipList []net.IP, iface *net.Interface, method string) error {
-	sender, err := NewRecvSender(method, iface)
+func Scan(c *ishell.Context, ipList []net.IP, ifname string, method string) error {
+	sender, err := NewRecvSender(method, ifname)
 	if err != nil {
 		log.Println(err)
 		return err
@@ -61,14 +61,14 @@ func Scan(c *ishell.Context, ipList []net.IP, iface *net.Interface, method strin
 }
 
 //NewRecvSender 简单工厂模式
-func NewRecvSender(scanMethod string, iface *net.Interface) (models.RecvSender, error) {
+func NewRecvSender(scanMethod string, ifname string) (models.RecvSender, error) {
 	switch scanMethod {
 	case "arp":
-		return arp.NewRecvSender(iface)
+		return arp.NewRecvSender(ifname)
 	case "udp":
-		return udp.NewRecvSender(iface)
+		return udp.NewRecvSender(ifname)
 	case "all":
-		return misc.NewRecvSender(iface)
+		return misc.NewRecvSender(ifname)
 	default:
 		return nil, errors.New("error scanMethod")
 	}

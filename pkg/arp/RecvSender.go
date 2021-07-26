@@ -22,16 +22,12 @@ type RecvSender struct {
 }
 
 //NewRecvSender 构造收发函数
-func NewRecvSender(iface *net.Interface) (models.RecvSender, error) {
-	handle, err := pcap.OpenLive(iface.Name, 1600, true, pcap.BlockForever)
+func NewRecvSender(ifname string) (models.RecvSender, error) {
+	handle, err := pcap.OpenLive(ifname, 1600, true, pcap.BlockForever)
 	if err != nil {
 		return nil, fmt.Errorf("OpenLive Error:%v", err)
 	}
 	// defer handle.Close() //不能关，还要用
-	myIP, err := utils.GetIPv4ByIface(iface)
-	if err != nil {
-		return nil, fmt.Errorf("IPv4 error:%v", err)
-	}
 	ethDstMAC, err := net.ParseMAC("ff:ff:ff:ff:ff:ff")
 	if err != nil {
 		return nil, err
@@ -40,11 +36,17 @@ func NewRecvSender(iface *net.Interface) (models.RecvSender, error) {
 	if err != nil {
 		return nil, err
 	}
+	myMAC, err := utils.GetMAC(ifname)
+	if err != nil {
+		fmt.Println("utils.GetMAC failed,err:", err)
+		return nil, err
+	}
+	myIP, err := utils.GetIPv4(ifname)
 	//构造广播包
 	return &RecvSender{
-		ethSrcMAC: iface.HardwareAddr,
+		ethSrcMAC: myMAC,
 		ethDstMAC: ethDstMAC,
-		arpSrcMAC: iface.HardwareAddr,
+		arpSrcMAC: myMAC,
 		arpDstMAC: arpDstMAC,
 		arpSrcIP:  myIP,
 		handle:    handle,
