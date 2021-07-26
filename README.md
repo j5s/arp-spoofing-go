@@ -1,5 +1,5 @@
 # [ARP Spoofing]
-<img src="https://img-blog.csdnimg.cn/20210726194704703.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzQxNTY0NA==,size_16,color_FFFFFF,t_70">
+<img src="https://img-blog.csdnimg.cn/20210726194704703.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzQxNTY0NA==,size_16,color_FFFFFF,t_70" width="400px">
 
 # [Usage]
 
@@ -18,11 +18,16 @@
   - webspy             嗅探http报文
 
 # [Example]
-首先启动redis数据库，然后：
-Linux/macOS : sudo go run main.go 
-windows: go run main.go
+首先启动redis数据库，然后：  
+
+```
+Linux/macOS : sudo go run main.go  
+Windows: go run main.go  
+```
+
 程序会自动连接redis数据库
 
+<<<<<<< HEAD
 - step0. show options 检查各项配置是否正确 
 如果配置不正确，可以使用 set key value 设置选项key的值为value
 <img src="https://img-blog.csdnimg.cn/20210726192618956.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzQxNTY0NA==,size_16,color_FFFFFF,t_70"/>
@@ -34,11 +39,20 @@ windows: go run main.go
 <img src="https://img-blog.csdnimg.cn/20210726190337205.png">
 <img src="https://img-blog.csdnimg.cn/2021072619041238.png" >
     - 启动后 发送数据包的协程将在后台默默运行
+=======
+- step0. show options 检查各项配置是否正确,如果配置不正确，可以使用 set key value 设置选项key的值为value
+- step1. scan 扫描局域网中的主机
+- step2. hosts 查看所有扫描到的主机
+- step3  cut 向某台主机发送arp欺骗报文,启动后 发送数据包的协程将在后台默默运行
+>>>>>>> db35ad97b9c83ad1b62d2de451bfc3544e533716
 - step4  cut stop 停止发送
+
+
+
 
 其他功能：
 - webspy 可以嗅探所有流经本机网卡的http包,启动webspy前，建议向使用middleattack将目标主机的流量导过来
-<img src="https://img-blog.csdnimg.cn/2021072619170764.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzQxNTY0NA==,size_16,color_FFFFFF,t_70">
+<img src="https://img-blog.csdnimg.cn/2021072619170764.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzQxNTY0NA==,size_16,color_FFFFFF,t_70"/>
 - sniff 嗅探有敏感信息的http数据包，并存入redis，可以通过loot命令查看收集到的数据包
 
 # [TODO] 
