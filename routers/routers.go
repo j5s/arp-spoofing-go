@@ -22,6 +22,12 @@ func Init(shell *ishell.Shell) {
 		Help: "展示配置项",
 		Func: controllers.ShowOptionsHandler,
 	})
+	//查看所有网卡名（为坑逼windows系统专门准备）
+	showCmd.AddCmd(&ishell.Cmd{
+		Name: "ifnames",
+		Help: "展示所有网卡名",
+		Func: controllers.ShowIfnamesHandler,
+	})
 	shell.AddCmd(showCmd)
 	//host 主机管理
 	hostCmd := &ishell.Cmd{
