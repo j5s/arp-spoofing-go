@@ -37,10 +37,10 @@ func ShowIfnamesHandler(c *ishell.Context) {
 		if len(devices[i].Addresses) == 0 {
 			continue
 		}
-		fmt.Printf("%s:\n", devices[i].Name)
+		fmt.Printf("Interface Name:%s\n", devices[i].Name)
 		for _, addr := range devices[i].Addresses {
-			fmt.Println("- IP address:", addr.IP)
-			fmt.Println("- Subnet mask:", addr.Netmask)
+			fmt.Println("|- IP address:", addr.IP)
+			fmt.Println("|- Subnet mask:", addr.Netmask)
 		}
 		fmt.Println()
 	}
