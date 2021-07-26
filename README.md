@@ -19,8 +19,8 @@
 
 # [Example]
 首先启动redis数据库，然后：
-Linux/macOS : sudo go run main.go 
-windows: go run main.go
+- Linux/macOS : sudo go run main.go 
+- windows: go run main.go
 程序会自动连接redis数据库
 - step0. show options 检查各项配置是否正确,如果配置不正确，可以使用 set key value 设置选项key的值为value
 - step1. scan 扫描局域网中的主机
