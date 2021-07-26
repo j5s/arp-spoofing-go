@@ -8,7 +8,7 @@ import (
 //Check 检查用户权限
 func Check() bool {
 	if runtime.GOOS == "windows" {
-		return true
+		return false
 	}
 	return os.Getuid() != 0
 }
