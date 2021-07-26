@@ -72,8 +72,12 @@ func StopCutHandler(c *ishell.Context) {
 	for key := range vars.HostCancelMap {
 		hosts = append(hosts, key)
 	}
+	if len(hosts) == 0 {
+		c.Println("暂时没有受攻击的主机")
+		return
+	}
 	choice := c.MultiChoice(hosts, "Please select host.")
-	c.Println("You choosed:", hosts[choice])
+	c.Println("Stop cutting:", hosts[choice])
 	vars.HostCancelMap[hosts[choice]]()
-	c.Println("通知线程退出")
+	delete(vars.HostCancelMap, hosts[choice])
 }

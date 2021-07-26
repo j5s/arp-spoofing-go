@@ -23,7 +23,6 @@ import (
 //@param gateway 网关的ip地址
 //@param target 目标主机的ip地址
 func Cut(method models.DeceitWay, packetType models.PacketType, gateway string, target string) error {
-	debug.Println("method:", models.DeceitGateway)
 	//1.获取目标主机的详细信息
 	hosts := redis.NewHosts()
 	targetHost, err := hosts.Get(target)
@@ -86,7 +85,6 @@ func Cut(method models.DeceitWay, packetType models.PacketType, gateway string, 
 		debug.Println("启动了一个ARP欺骗协程:", routine.GetGID())
 		defer func() {
 			debug.Println("ARP欺骗协程退出:", routine.GetGID())
-			delete(vars.HostCancelMap, host.IP)
 		}()
 		//6.开始滴答滴答地发邪恶的ARP欺骗包
 		for range time.Tick(time.Millisecond * 800) {
@@ -102,10 +100,6 @@ func Cut(method models.DeceitWay, packetType models.PacketType, gateway string, 
 				log.Println("sent arp request failed,because ", err)
 				return
 			}
-			// debug.Printf("ethDstMAC:%s,ethSrcMAC:%s,arpDstMAC:%s,arpSrcMAC:%s,arpDstIP:%s,arpSrcIP:%s\n",
-			// 	dstMACMap[method].String(), srcMAC.String(),
-			// 	dstMACMap[method].String(), srcMAC.String(),
-			// 	dstIPMap[method].String(), srcIPMap[method].String())
 			select {
 			case <-ctx.Done():
 				return

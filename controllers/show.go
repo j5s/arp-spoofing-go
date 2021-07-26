@@ -58,3 +58,15 @@ func ShowCuttedHandler(c *ishell.Context) {
 		c.Println(key)
 	}
 }
+
+//ShowMiddleAttackedHandler 显示所有被中间人攻击的主机
+func ShowMiddleAttackedHandler(c *ishell.Context) {
+	if len(vars.MiddleAttackCancelMap) == 0 {
+		c.Println("暂无被中间人攻击的主机")
+		return
+	}
+	c.Println(vars.Yellow("MiddleAttacked Hosts:"))
+	for key := range vars.MiddleAttackCancelMap {
+		c.Println(key)
+	}
+}

@@ -33,6 +33,11 @@ func Init(shell *ishell.Shell) {
 		Help: "展示所有被切断的主机",
 		Func: controllers.ShowCuttedHandler,
 	})
+	showCmd.AddCmd(&ishell.Cmd{
+		Name: "middle_attacked",
+		Help: "展示所有被中间人攻击的主机",
+		Func: controllers.ShowMiddleAttackedHandler,
+	})
 	shell.AddCmd(showCmd)
 	//host 主机管理
 	hostCmd := &ishell.Cmd{
@@ -60,7 +65,6 @@ func Init(shell *ishell.Shell) {
 		})
 	}
 	shell.AddCmd(setCmd)
-
 	//scan 扫描功能
 	shell.AddCmd(&ishell.Cmd{
 		Name: "scan",
@@ -73,11 +77,6 @@ func Init(shell *ishell.Shell) {
 		Help: "通过ARP欺骗切断局域网内某台主机的网络",
 		Func: controllers.CutHandler,
 	}
-	cutCmd.AddCmd(&ishell.Cmd{
-		Name: "stop",
-		Help: "停止攻击",
-		Func: controllers.StopCutHandler,
-	})
 	shell.AddCmd(cutCmd)
 	//sniff 嗅探功能
 	sniffCmd := &ishell.Cmd{
@@ -85,11 +84,6 @@ func Init(shell *ishell.Shell) {
 		Help: "嗅探用户名和密码",
 		Func: controllers.SniffHandler,
 	}
-	sniffCmd.AddCmd(&ishell.Cmd{
-		Name: "stop",
-		Help: "停止敏感报文嗅探器",
-		Func: controllers.StopSniffHandler,
-	})
 	sniffCmd.AddCmd(&ishell.Cmd{
 		Name: "status",
 		Help: "查看敏感报文嗅探器的状态",
@@ -111,18 +105,8 @@ func Init(shell *ishell.Shell) {
 	webspyCmd := &ishell.Cmd{
 		Name: "webspy",
 		Help: "嗅探http报文",
-		Func: nil,
-	}
-	webspyCmd.AddCmd(&ishell.Cmd{
-		Name: "start",
-		Help: "开始嗅探http报文",
 		Func: controllers.WebSpyHandler,
-	})
-	webspyCmd.AddCmd(&ishell.Cmd{
-		Name: "stop",
-		Help: "停止嗅探",
-		Func: controllers.StopWebSpyHandler,
-	})
+	}
 	shell.AddCmd(webspyCmd)
 	//中间人攻击模块
 	shell.AddCmd(&ishell.Cmd{
@@ -130,5 +114,31 @@ func Init(shell *ishell.Shell) {
 		Help: "中间人攻击",
 		Func: controllers.MiddleAttackHandler,
 	})
-
+	//停止攻击
+	stopCmd := &ishell.Cmd{
+		Name: "stop",
+		Help: "停止攻击",
+		Func: nil,
+	}
+	stopCmd.AddCmd(&ishell.Cmd{
+		Name: "middle_attacked",
+		Help: "停止中间人攻击",
+		Func: controllers.StopMiddleAttackHandler,
+	})
+	stopCmd.AddCmd(&ishell.Cmd{
+		Name: "webspy",
+		Help: "停止嗅探",
+		Func: controllers.StopWebSpyHandler,
+	})
+	stopCmd.AddCmd(&ishell.Cmd{
+		Name: "sniff",
+		Help: "停止敏感报文嗅探器",
+		Func: controllers.StopSniffHandler,
+	})
+	stopCmd.AddCmd(&ishell.Cmd{
+		Name: "cut",
+		Help: "停止断网攻击",
+		Func: controllers.StopCutHandler,
+	})
+	shell.AddCmd(stopCmd)
 }
