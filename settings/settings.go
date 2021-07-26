@@ -2,7 +2,7 @@ package settings
 
 import (
 	"ARPSpoofing/models"
-	"ARPSpoofing/utils"
+	"ARPSpoofing/pkg/utils"
 	"fmt"
 
 	"github.com/spf13/viper"

@@ -2,7 +2,7 @@ package arp
 
 import (
 	"ARPSpoofing/models"
-	"ARPSpoofing/utils"
+	"ARPSpoofing/pkg/utils"
 	"context"
 	"fmt"
 	"net"

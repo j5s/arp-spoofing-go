@@ -3,7 +3,7 @@ package udp
 import (
 	"ARPSpoofing/models"
 	"ARPSpoofing/pkg/icmp"
-	"ARPSpoofing/utils"
+	"ARPSpoofing/pkg/utils"
 	"context"
 	"fmt"
 	"math/rand"

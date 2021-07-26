@@ -3,8 +3,8 @@ package logic
 import (
 	"ARPSpoofing/dao/redis"
 	"ARPSpoofing/pkg/arp"
+	"ARPSpoofing/pkg/utils"
 	"ARPSpoofing/settings"
-	"ARPSpoofing/utils"
 	"fmt"
 	"log"
 	"net"
@@ -15,6 +15,7 @@ import (
 	"github.com/google/gopacket/pcap"
 )
 
+//MiddleAttack 中间人工具
 func MiddleAttack(alice, bob, gateway string) error {
 	ifname, err := settings.Options.Get("ifname")
 	if err != nil {

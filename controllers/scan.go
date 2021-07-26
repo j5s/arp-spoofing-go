@@ -4,7 +4,7 @@ import (
 	"ARPSpoofing/logic"
 	"ARPSpoofing/pkg/privileges"
 	"ARPSpoofing/settings"
-	"ARPSpoofing/utils"
+	"ARPSpoofing/pkg/utils"
 	"log"
 
 	"github.com/abiosoft/ishell"
