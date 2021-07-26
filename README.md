@@ -1,5 +1,6 @@
 # [ARP Spoofing]
 <img src="https://img-blog.csdnimg.cn/20210726194704703.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzQxNTY0NA==,size_16,color_FFFFFF,t_70">
+
 # [Usage]
 
 - Commands:
@@ -31,7 +32,6 @@ windows: go run main.go
 - step3  cut 向某台主机发送arp欺骗报文
 <img src="https://img-blog.csdnimg.cn/20210726190337205.png" width="300px">
 <img src="https://img-blog.csdnimg.cn/2021072619041238.png" width="300px">
-<img src="https://img-blog.csdnimg.cn/2021072619050161.png" width="300px">
     - 启动后 发送数据包的协程将在后台默默运行
 - step4  cut stop 停止发送
 
