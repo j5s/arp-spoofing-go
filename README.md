@@ -21,6 +21,11 @@
 首先启动redis数据库，然后：  
 
 ```
+1.打开go mod 进行依赖管理
+go env -w GO111MODULE=on
+2.设置第三方库的镜像代理  
+go env -w GOPROXY=https://goproxy.cn,https://goproxy.io,direct
+3.运行
 Linux/macOS : sudo go run main.go  
 Windows: go run main.go  
 ```
