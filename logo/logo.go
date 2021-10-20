@@ -6,8 +6,10 @@ import (
 	"os"
 )
 
+var HOME string = os.Getenv("HOME")
+
 //LogoFile 开始时显示的Logo
-var LogoFile string = "./logo/logo.txt"
+var LogoFile string = fmt.Sprintf("%s/arp-spoofing/logo/logo.txt", HOME)
 
 //Show 显示Logo
 func Show(logofile string) {
