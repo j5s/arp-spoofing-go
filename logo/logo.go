@@ -9,7 +9,7 @@ import (
 var HOME string = os.Getenv("HOME")
 
 //LogoFile 开始时显示的Logo
-var LogoFile string = fmt.Sprintf("%s/arp-spoofing/logo/logo.txt", HOME)
+var LogoFile string = fmt.Sprintf("%s/src/arp-spoofing/logo/logo.txt", HOME)
 
 //Show 显示Logo
 func Show(logofile string) {
