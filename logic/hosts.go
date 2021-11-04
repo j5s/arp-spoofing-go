@@ -2,12 +2,12 @@ package logic
 
 import (
 	"ARPSpoofing/dao/redis"
+	"ARPSpoofing/pkg/table"
 	"fmt"
 	"log"
-	"os"
 
+	"github.com/fatih/color"
 	"github.com/fatih/structs"
-	"github.com/olekukonko/tablewriter"
 )
 
 //ShowHosts 展示所有主机
@@ -18,24 +18,20 @@ func ShowHosts() error {
 		return err
 	}
 	if len(hosts) == 0 {
+		fmt.Println(color.YellowString("[*] 没有主机,请先 scan 扫描局域网"))
 		return nil
 	}
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetAlignment(tablewriter.ALIGN_CENTER)
-	table.SetAutoMergeCells(true)
-	table.SetBorder(true)
-	table.SetRowLine(true)
-	table.SetHeader(structs.Names(hosts[0]))
-
+	headers := structs.Names(hosts[0])
+	data := make([][]string, 0, len(hosts))
 	for index, host := range hosts {
-		table.Append([]string{
+		data = append(data, []string{
 			fmt.Sprintf("%v", index),
 			host.IP,
 			host.MAC,
 			host.MACInfo,
 		})
 	}
-	table.Render() // Send output
+	table.Show(headers, data)
 	return nil
 }
 

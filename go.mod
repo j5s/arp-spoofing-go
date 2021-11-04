@@ -20,6 +20,7 @@ require (
 	github.com/n0madic/macvendor v0.0.0-20210725051214-491e0ad68b0d
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/viper v1.8.1
 	github.com/thinkeridea/go-extend v1.3.2 // indirect
 	github.com/timest/gomanuf v0.0.0-20171028040013-3d424250f36d

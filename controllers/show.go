@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"ARPSpoofing/pkg/table"
 	"ARPSpoofing/settings"
 	"ARPSpoofing/vars"
 	"fmt"
@@ -53,10 +54,12 @@ func ShowCuttedHandler(c *ishell.Context) {
 		c.Println("暂无被切断的主机")
 		return
 	}
-	c.Println(vars.Yellow("Cutted Hosts:"))
+	headers := []string{"Cutted Hosts"}
+	data := make([][]string, 0, len(vars.HostCancelMap))
 	for key := range vars.HostCancelMap {
-		c.Println(key)
+		data = append(data, []string{key})
 	}
+	table.Show(headers, data)
 }
 
 //ShowMiddleAttackedHandler 显示所有被中间人攻击的主机
@@ -65,8 +68,10 @@ func ShowMiddleAttackedHandler(c *ishell.Context) {
 		c.Println("暂无被中间人攻击的主机")
 		return
 	}
-	c.Println(vars.Yellow("MiddleAttacked Hosts:"))
+	headers := []string{"MiddleAttacked Hosts"}
+	data := make([][]string, 0, len(vars.MiddleAttackCancelMap))
 	for key := range vars.MiddleAttackCancelMap {
-		c.Println(key)
+		data = append(data, []string{key})
 	}
+	table.Show(headers, data)
 }

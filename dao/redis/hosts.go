@@ -4,6 +4,8 @@ import (
 	"ARPSpoofing/models"
 	"encoding/json"
 	"log"
+
+	"github.com/sirupsen/logrus"
 )
 
 type Hosts struct {
@@ -37,10 +39,12 @@ func (h *Hosts) Get(ip string) (models.Host, error) {
 	var host models.Host
 	ret, err := rdb.HGet(h.key, ip).Result()
 	if err != nil {
+		logrus.Errorf("rdb.HGet(%v, %v).Result() faild,err:%v\n", h.key, ip, err)
 		return host, err
 	}
 	err = json.Unmarshal([]byte(ret), &host)
 	if err != nil {
+		logrus.Errorf("json.Unmarshal([]byte(ret), &host) failed,err:%v\n", err)
 		return host, err
 	}
 	return host, nil

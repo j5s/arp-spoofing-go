@@ -3,6 +3,7 @@ package models
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/fatih/structs"
 	"github.com/olekukonko/tablewriter"
@@ -43,7 +44,7 @@ func (o *Options) Add(name string, value string, required bool, description stri
 func (o *Options) Set(name string, value string) {
 	for i := range o.Content {
 		if o.Content[i].Name == name {
-			o.Content[i].Value = value
+			o.Content[i].Value = strings.TrimSpace(value)
 		}
 	}
 }

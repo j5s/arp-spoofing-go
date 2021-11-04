@@ -4,10 +4,13 @@ import (
 	"ARPSpoofing/dao/redis"
 	"ARPSpoofing/logic"
 	"ARPSpoofing/models"
+	"ARPSpoofing/pkg/table"
 	"ARPSpoofing/settings"
 	"ARPSpoofing/vars"
+	"fmt"
 
 	"github.com/abiosoft/ishell"
+	"github.com/fatih/color"
 )
 
 //CutHandler 断网功能
@@ -51,19 +54,20 @@ func CutHandler(c *ishell.Context) {
 		string(models.Reply),
 	}
 	typeIndex := c.MultiChoice(packetTypes, "Send Reply packet or Request packet?")
-	c.Printf("target:%s\n", noCuttedList[targetIndex])
-	c.Printf("gateway:%s\n", gateway)
-	c.Printf("deceit way:%s\n", methods[methodIndex])
-	c.Printf("packet type:%s\n", packetTypes[typeIndex])
-	//5.业务逻辑
+	//5.输出配置
+	showCutConfig(noCuttedList[targetIndex], gateway, methods[methodIndex], packetTypes[typeIndex])
+
+	//6.业务逻辑
 	err = logic.Cut(models.DeceitWay(methods[methodIndex]),
 		models.PacketType(packetTypes[typeIndex]),
 		gateway,
 		noCuttedList[targetIndex])
 	if err != nil {
-		c.Println(err)
+		c.Println(color.RedString(fmt.Sprintf("[*] 欺骗协程启动失败 logic.Cut faild,err:%v", err)))
 		return
 	}
+	c.Println(color.GreenString("[*] 欺骗协程启动成功"))
+	c.Println(color.GreenString("[*] show cutted 查看当前正在被攻击的设备"))
 }
 
 //StopCutHandler 停止攻击
@@ -80,4 +84,10 @@ func StopCutHandler(c *ishell.Context) {
 	c.Println("Stop cutting:", hosts[choice])
 	vars.HostCancelMap[hosts[choice]]()
 	delete(vars.HostCancelMap, hosts[choice])
+}
+
+func showCutConfig(target, gateway, deceitWay, packetType string) {
+	headers := []string{"目标", "网关", "欺骗方式", "包类型"}
+	data := [][]string{{target, gateway, deceitWay, packetType}}
+	table.Show(headers, data)
 }

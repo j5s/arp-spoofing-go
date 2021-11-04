@@ -15,6 +15,7 @@ import (
 
 	"github.com/google/gopacket/layers"
 	"github.com/google/gopacket/pcap"
+	"github.com/sirupsen/logrus"
 )
 
 //Cut 断网功能
@@ -27,13 +28,13 @@ func Cut(method models.DeceitWay, packetType models.PacketType, gateway string, 
 	hosts := redis.NewHosts()
 	targetHost, err := hosts.Get(target)
 	if err != nil {
-		log.Println("redis get target host failed,err:", err)
+		logrus.Errorf("hosts.Get(%s) failed,err:%v\n", target, err)
 		return err
 	}
 	//2.获取网关的详细信息
 	gatewayHost, err := hosts.Get(gateway)
 	if err != nil {
-		log.Println("redis get gateway host failed,err:", err)
+		logrus.Errorf("hosts.Get(%s) failed,err:%v\n", gateway, err)
 		return err
 	}
 	//3.准备表

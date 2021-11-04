@@ -7,9 +7,9 @@ import (
 	"ARPSpoofing/vars"
 	"context"
 	"fmt"
-	"log"
 
 	"github.com/abiosoft/ishell"
+	"github.com/fatih/color"
 )
 
 //MiddleAttackHandler 中间人攻击
@@ -41,12 +41,16 @@ func MiddleAttackHandler(c *ishell.Context) {
 		return
 	}
 	targetIndex := c.MultiChoice(noAttackedList, "which host do you want to attack?")
-	fmt.Printf("\r成为%s 和%s之间的中间人\n", gateway, noAttackedList[targetIndex])
+	c.Println(color.YellowString(fmt.Sprintf("[*] 成为%s 和%s之间的中间人", gateway, noAttackedList[targetIndex])))
 	ctx, cancel := context.WithCancel(context.Background())
 	if err := logic.MiddleAttack(ctx, gateway, noAttackedList[targetIndex], gateway); err != nil {
-		log.Println("logic.MiddleAttack failed,err:", err)
+		c.Println(color.RedString(fmt.Sprintf("[*] 中间人攻击协程启动失败,logic.MiddleAttack failed,err:%v", err)))
+		_ = cancel
 		return
 	}
+	c.Println(color.GreenString("[*] 中间人攻击协程启动成功"))
+	c.Println(color.GreenString("[*] show middle_attacked 查看正在进行的中间人攻击"))
+	c.Println(color.GreenString("[*] stop middle_attacked 停止中间人攻击"))
 	//3.维护一个中间人攻击和退出函数的映射
 	vars.MiddleAttackCancelMap[noAttackedList[targetIndex]] = cancel
 }

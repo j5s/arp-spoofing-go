@@ -15,6 +15,7 @@ import (
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
 	"github.com/google/gopacket/pcap"
+	"github.com/sirupsen/logrus"
 )
 
 //MiddleAttack 中间人工具
@@ -41,7 +42,7 @@ func MiddleAttack(ctx context.Context, alice, bob, gateway string) error {
 	hosts := redis.NewHosts()
 	aliceHost, err := hosts.Get(alice)
 	if err != nil {
-		log.Println("hosts.Get failed,err:", err)
+		logrus.Errorf("hosts.Get(%s) failed,err:%v\n", alice, err)
 		return err
 	}
 	aliceMAC, _ := net.ParseMAC(aliceHost.MAC)
@@ -49,7 +50,7 @@ func MiddleAttack(ctx context.Context, alice, bob, gateway string) error {
 	//获取bob的相关信息
 	bobHost, err := hosts.Get(bob)
 	if err != nil {
-		log.Println("host.Get failed,err:", err)
+		logrus.Errorf("host.Get(%s) failed,err:%v\n", bob, err)
 		return err
 	}
 	bobMAC, _ := net.ParseMAC(bobHost.MAC)
